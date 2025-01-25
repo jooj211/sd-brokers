@@ -99,18 +99,3 @@ TOPIC = "sensors/data"
 
 ## 📄 Licença
 MIT License - Consulte o arquivo [LICENSE](LICENSE) para detalhes.
-
----
-
-**Contribuições são bem-vindas!**  
-📧 Contato: [seu-email@example.com] | 💬 Issues: [Reportar Problema](https://github.com/seu-usuario/repo/issues)
-```
-
-Este README fornece:  
-- Instruções claras para diferentes ambientes (Windows/WSL)  
-- Exemplos de uso direto  
-- Opção de containerização  
-- Troubleshooting básico  
-- Seção de contribuição padrão  
-
-Personalize os campos de contato e licença conforme necessário! 😊
