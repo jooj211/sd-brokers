@@ -38,7 +38,7 @@ pip install paho-mqtt
 ## ⚙️ Configuração
 Edite os seguintes parâmetros nos arquivos se necessário:
 ```python
-# middleware_mqtt.py e simulador_sensor_mqtt.py
+# middleware.py e simulador_sensor.py
 BROKER_HOST = "localhost"  # Use o IP do host se o broker estiver em outra máquina
 BROKER_PORT = 1883
 TOPIC = "sensors/data"
@@ -47,12 +47,12 @@ TOPIC = "sensors/data"
 ## 🚀 Uso
 1. **Inicie o Middleware (Subscriber):**
    ```bash
-   python middleware_mqtt.py
+   python middleware.py
    ```
 
 2. **Execute o Simulador de Sensores (Publisher):**
    ```bash
-   python simulador_sensor_mqtt.py
+   python simulador_sensor.py
    ```
 
 3. **Teste Manual via CLI:**
@@ -84,7 +84,7 @@ TOPIC = "sensors/data"
          
      middleware:
        build: .
-       command: python middleware_mqtt.py
+       command: python middleware.py
        depends_on:
          - broker
    ```
