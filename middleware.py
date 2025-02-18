@@ -2,7 +2,7 @@ import json
 import paho.mqtt.client as mqtt
 
 BROKER_HOST = "rabbitmq"
-BROKER_PORT = 5672 
+BROKER_PORT = 1883 
 TOPIC = "sensors/data"
 
 
