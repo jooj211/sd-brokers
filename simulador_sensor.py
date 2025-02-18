@@ -1,13 +1,11 @@
-# simulador_sensor_mqtt.py
 import json
 import random
 import time
 
 import paho.mqtt.client as mqtt
 
-# Configurações MQTT
-BROKER_HOST = "localhost"  # Ou IP do Windows se broker estiver lá
-BROKER_PORT = 1883
+BROKER_HOST = "rabbitmq"
+BROKER_PORT = 5672 
 TOPIC = "sensors/data"
 
 client = mqtt.Client()

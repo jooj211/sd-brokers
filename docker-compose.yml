@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "1883:1883"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  middleware:
+    build: .
+    container_name: middleware
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./middleware.py:/app/middleware.py
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    command: ["python", "./middleware.py"]
+
+  sensors:
+    build: .
+    container_name: sensors
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./simulador_sensor.py:/app/simulador_sensor.py
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    command: ["python", "./simulador_sensor.py"]
+
+volumes:
+  rabbitmq_data:
