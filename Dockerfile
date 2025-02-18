@@ -7,4 +7,4 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir paho-mqtt
-CMD ["python", "./simulador_sensor.py"]
+CMD ["python", "./sensors.py"]

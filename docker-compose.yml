@@ -1,40 +1,95 @@
 version: '3.8'
 
+networks:
+  rabbitmq-net:
+    driver: bridge
+
 services:
-  rabbitmq:
+  rabbitmq1:
     build:
       context: ./rabbitmq
       dockerfile: Dockerfile
-    container_name: rabbitmq
+    container_name: rabbitmq1
+    hostname: rabbitmq1
     restart: always
+    environment:
+      - RABBITMQ_NODENAME=rabbit@rabbitmq1
+      - RABBITMQ_USE_LONGNAME=false
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "15672:15672"  # UI apenas no nó principal
       - "1883:1883"
+      - "5672:5672"
+      - "4369:4369"
+      - "25672:25672"
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq1_data:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    networks:
+      - rabbitmq-net
+
+  rabbitmq2:
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile
+    container_name: rabbitmq2
+    hostname: rabbitmq2
+    restart: always
+    environment:
+      - RABBITMQ_USE_LONGNAME=false
+      - RABBITMQ_NODENAME=rabbit@rabbitmq2
+    volumes:
+      - rabbitmq2_data:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf  # Monta o arquivo de config
+    networks:
+      - rabbitmq-net
+    depends_on:
+      - rabbitmq1
+
+  rabbitmq3:
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile
+    container_name: rabbitmq3
+    hostname: rabbitmq3
+    restart: always
+    environment:
+      - RABBITMQ_USE_LONGNAME=false
+      - RABBITMQ_NODENAME=rabbit@rabbitmq3
+    volumes:
+      - rabbitmq3_data:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf  # Monta o arquivo de config
+    networks:
+      - rabbitmq-net
+    depends_on:
+      - rabbitmq1
 
   middleware:
     build: .
     container_name: middleware
-    depends_on:
-      - rabbitmq
     volumes:
       - ./middleware.py:/app/middleware.py
     environment:
-      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
+    networks:
+      - rabbitmq-net
+    depends_on:
+      - rabbitmq1
     command: ["python", "./middleware.py"]
 
   sensors:
     build: .
     container_name: sensors
-    depends_on:
-      - rabbitmq
     volumes:
-      - ./simulador_sensor.py:/app/simulador_sensor.py
+      - ./sensors.py:/app/sensors.py
     environment:
-      - RABBITMQ_HOST=rabbitmq
-    command: ["python", "./simulador_sensor.py"]
+      - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
+    networks:
+      - rabbitmq-net
+    depends_on:
+      - rabbitmq1
+    command: ["python", "./sensors.py"]
 
 volumes:
-  rabbitmq_data:
+  rabbitmq1_data:
+  rabbitmq2_data:
+  rabbitmq3_data:
