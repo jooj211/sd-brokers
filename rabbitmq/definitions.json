@@ -78,7 +78,7 @@
       }
     },
     {
-      "name": "actuators.data",
+      "name": "actuators.command",
       "vhost": "/",
       "type": "topic",
       "durable": true,
@@ -91,7 +91,7 @@
   ],
   "bindings": [
     {
-      "source": "actuators.data",
+      "source": "actuators.command",
       "vhost": "/",
       "destination": "actuators-queue",
       "destination_type": "queue",
