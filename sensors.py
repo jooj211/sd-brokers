@@ -9,14 +9,14 @@ BROKER_PORT = 1883
 TOPIC = "sensors.data"
 RETRY_INTERVAL = 5
 
-# Mapeamento fixo de id_device para tipo
+# Mapeamento fixo de id_device para tipo (sem atuador)
 DEVICE_TYPES = {
     1: "Temperatura",
     2: "Umidade",
     3: "Pressao",
-    4: "atuador",
-    5: "Temperatura",
-    6: "Umidade",
+    4: "Temperatura",
+    5: "Umidade",
+    6: "Pressao",
 }
 
 class SensorClusterClient:
@@ -47,11 +47,8 @@ class SensorClusterClient:
             id_device = random.randint(1, 6)   # ID do dispositivo (fixo para manter o tipo)
             tipo = DEVICE_TYPES[id_device]     # Obtém o tipo fixo do dispositivo
             
-            # Gera o valor com base no tipo
-            if tipo == "atuador":
-                valor = random.randint(0, 1)  # Valor binário para atuador
-            else:
-                valor = random.uniform(30, 40)  # Valor contínuo para sensores
+            # Gera o valor para sensores (não há mais atuador)
+            valor = random.uniform(30, 40)  # Valor contínuo para sensores
             
             # Estrutura dos dados a serem enviados
             sensor_data = {
