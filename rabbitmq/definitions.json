@@ -50,7 +50,8 @@
       "durable": true,
       "auto_delete": false,
       "arguments": {
-        "x-queue-type": "classic"
+        "x-queue-type": "quorum",
+        "x-max-length-bytes": 104857600
       }
     },
     {
@@ -59,54 +60,70 @@
       "durable": true,
       "auto_delete": false,
       "arguments": {
-        "x-queue-type": "classic"
+        "x-queue-type": "quorum",
+        "x-max-length-bytes": 104857600
       }
     }
   ],
-  "exchanges": [
+"exchanges": [
     {
-      "name": "sensors/data",
+      "name": "sensors.data",
       "vhost": "/",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
       "internal": false,
       "arguments": {
-        
+        "alternate-exchange": "unrouted.sensors"
       }
     },
     {
-      "name": "actuators/data",
+      "name": "actuators.data",
       "vhost": "/",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
       "internal": false,
       "arguments": {
-        
+        "alternate-exchange": "unrouted.actuators"
       }
     }
   ],
   "bindings": [
     {
-      "source": "actuators/data",
+      "source": "actuators.data",
       "vhost": "/",
       "destination": "actuators-queue",
       "destination_type": "queue",
-      "routing_key": "",
+      "routing_key": "#", 
       "arguments": {
-        
+        "x-match": "all"
       }
     },
     {
-      "source": "sensors/data",
+      "source": "sensors.data",
       "vhost": "/",
       "destination": "sensors-queue",
       "destination_type": "queue",
-      "routing_key": "",
+      "routing_key": "#",
       "arguments": {
-        
       }
-    }
+    },
+    {
+      "source": "amq.topic",
+      "vhost": "/",
+      "destination": "sensors-queue",
+      "destination_type": "queue",
+      "routing_key": "#",
+      "arguments": {}
+    },
+    {
+      "source": "amq.topic",
+      "vhost": "/",
+      "destination": "actuators-queue",
+      "destination_type": "queue",
+      "routing_key": "#",
+      "arguments": {}
+    }    
   ]
 }

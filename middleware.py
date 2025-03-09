@@ -5,7 +5,7 @@ import time
 # Lista de nós do cluster
 BROKERS = ["rabbitmq1", "rabbitmq2", "rabbitmq3"]
 BROKER_PORT = 1883
-TOPIC = "sensors/data"
+TOPIC = "sensors.data"
 
 def on_message(client, userdata, msg):
     try:
@@ -22,8 +22,9 @@ def connect_client():
     for broker in BROKERS:
         try:
             print(f"Tentando conectar em {broker}...")
+            client.username_pw_set("admin", "admin123")
             client.connect(broker, BROKER_PORT, 60)
-            client.subscribe(TOPIC, qos=2)  # QoS 2 para garantia de entrega
+            client.subscribe(TOPIC, qos=2)
             print(f"Conectado ao nó {broker}")
             return client
         except Exception as e:

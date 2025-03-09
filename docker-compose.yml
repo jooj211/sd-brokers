@@ -3,6 +3,7 @@ version: '3.8'
 networks:
   rabbitmq-net:
     driver: bridge
+    name: rabbitmq-net
 
 services:
   rabbitmq1:

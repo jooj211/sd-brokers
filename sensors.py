@@ -3,10 +3,9 @@ import random
 import time
 import paho.mqtt.client as mqtt
 
-# Lista de nós do cluster
 BROKERS = ["rabbitmq1", "rabbitmq2", "rabbitmq3"]
 BROKER_PORT = 1883
-TOPIC = "sensors/data"
+TOPIC = "sensors.data"
 RETRY_INTERVAL = 5
 
 class SensorClusterClient:
@@ -20,6 +19,7 @@ class SensorClusterClient:
             for broker in BROKERS:
                 try:
                     self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+                    self.client.username_pw_set("admin", "admin123")
                     self.client.connect(broker, BROKER_PORT, 60)
                     self.current_broker = broker
                     print(f"Conectado ao nó {broker}")
@@ -41,7 +41,7 @@ class SensorClusterClient:
             
             try:
                 self.client.publish(
-                    topic=TOPIC,
+                    topic="sensors.data",
                     payload=json.dumps(sensor_data),
                     qos=2
                 )
