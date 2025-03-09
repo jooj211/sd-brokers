@@ -5,8 +5,10 @@ COPY .erlang.cookie /var/lib/rabbitmq/.erlang.cookie
 RUN chmod 600 /var/lib/rabbitmq/.erlang.cookie
 
 # 1. Copia os arquivos primeiro
+COPY definitions.json /etc/rabbitmq
 COPY rabbitmq.conf /etc/rabbitmq/
 COPY cluster-entrypoint.sh /usr/local/bin/
+RUN cat /etc/rabbitmq/rabbitmq.conf
 
 # 2. Define permissões do script
 RUN chmod +x /usr/local/bin/cluster-entrypoint.sh

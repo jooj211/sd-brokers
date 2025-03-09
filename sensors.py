@@ -7,6 +7,7 @@ import paho.mqtt.client as mqtt
 BROKERS = ["rabbitmq1", "rabbitmq2", "rabbitmq3"]
 BROKER_PORT = 1883
 TOPIC = "sensors/data"
+RETRY_INTERVAL = 5
 
 class SensorClusterClient:
     def __init__(self):
@@ -15,17 +16,19 @@ class SensorClusterClient:
         self.connect()
     
     def connect(self):
-        for broker in BROKERS:
-            try:
-                self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-                self.client.connect(broker, BROKER_PORT, 60)
-                self.current_broker = broker
-                print(f"Conectado ao nó {broker}")
-                return
-            except Exception as e:
-                print(f"Falha na conexão com {broker}: {str(e)}")
-        
-        raise Exception("Nenhum nó do cluster disponível")
+        while True:
+            for broker in BROKERS:
+                try:
+                    self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+                    self.client.connect(broker, BROKER_PORT, 60)
+                    self.current_broker = broker
+                    print(f"Conectado ao nó {broker}")
+                    return
+                except Exception as e:
+                    print(f"Falha na conexão com {broker}: {str(e)}")
+            
+            print(f"Todas as conexões falharam. Tentando novamente em {RETRY_INTERVAL} segundos...")
+            time.sleep(RETRY_INTERVAL)
     
     def publish_data(self):
         while True:

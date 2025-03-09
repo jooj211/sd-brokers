@@ -15,6 +15,7 @@ def on_message(client, userdata, msg):
         print(" [!] Mensagem inválida recebida")
 
 def connect_client():
+    print("Conectando ao cluster...")
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.on_message = on_message
     
@@ -31,6 +32,7 @@ def connect_client():
     raise Exception("Nenhum nó do cluster disponível")
 
 def main():
+    print('Middleware iniciado');
     while True:
         try:
             client = connect_client()
@@ -44,4 +46,5 @@ def main():
             time.sleep(5)
 
 if __name__ == "__main__":
+    print('Middleware iniciado 22');
     main()
