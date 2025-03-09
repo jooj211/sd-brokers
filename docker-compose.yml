@@ -89,6 +89,19 @@ services:
       - rabbitmq1
     command: ["python", "./sensors.py"]
 
+  actuators:
+    build: .
+    container_name: actuators
+    volumes:
+      - ./actuators.py:/app/actuators.py
+    environment:
+      - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
+    networks:
+      - rabbitmq-net
+    depends_on:
+      - rabbitmq1
+    command: ["python", "./actuators.py"]
+
 volumes:
   rabbitmq1_data:
   rabbitmq2_data:
