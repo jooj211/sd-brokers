@@ -52,6 +52,15 @@
       "arguments": {
         "x-queue-type": "classic"
       }
+    },
+    {
+      "name": "actuators-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
     }
   ],
   "exchanges": [
@@ -65,9 +74,30 @@
       "arguments": {
         
       }
+    },
+    {
+      "name": "actuators/data",
+      "vhost": "/",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {
+        
+      }
     }
   ],
   "bindings": [
+    {
+      "source": "actuators/data",
+      "vhost": "/",
+      "destination": "actuators-queue",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {
+        
+      }
+    },
     {
       "source": "sensors/data",
       "vhost": "/",
