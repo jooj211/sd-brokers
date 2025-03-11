@@ -91,30 +91,11 @@
   ],
   "bindings": [
     {
-      "source": "actuators.data",
-      "vhost": "/",
-      "destination": "actuators-queue",
-      "destination_type": "queue",
-      "routing_key": "#", 
-      "arguments": {
-        "x-match": "all"
-      }
-    },
-    {
-      "source": "sensors.data",
-      "vhost": "/",
-      "destination": "sensors-queue",
-      "destination_type": "queue",
-      "routing_key": "#",
-      "arguments": {
-      }
-    },
-    {
       "source": "amq.topic",
       "vhost": "/",
       "destination": "sensors-queue",
       "destination_type": "queue",
-      "routing_key": "#",
+      "routing_key": "sensors.data",
       "arguments": {}
     },
     {
@@ -122,7 +103,7 @@
       "vhost": "/",
       "destination": "actuators-queue",
       "destination_type": "queue",
-      "routing_key": "#",
+      "routing_key": "actuators.command",
       "arguments": {}
     }    
   ]
