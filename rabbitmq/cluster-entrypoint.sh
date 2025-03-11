@@ -15,3 +15,4 @@ if [ "$RABBITMQ_NODENAME" != "rabbit@rabbitmq1" ]; then
 fi
 
 tail -f /dev/null
+exec keepalived --dont-fork --log-console

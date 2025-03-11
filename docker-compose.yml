@@ -4,6 +4,9 @@ networks:
   rabbitmq-net:
     driver: bridge
     name: rabbitmq-net
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
 
 services:
   rabbitmq1:
@@ -13,9 +16,12 @@ services:
     container_name: rabbitmq1
     hostname: rabbitmq1
     restart: always
+    cap_add:
+      - NET_ADMIN
     environment:
       - RABBITMQ_NODENAME=rabbit@rabbitmq1
       - RABBITMQ_USE_LONGNAME=false
+      - KEEPALIVED_PRIORITY=100
     ports:
       - "15672:15672"  # UI apenas no nó principal
       - "1883:1883"
@@ -26,7 +32,8 @@ services:
       - rabbitmq1_data:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     networks:
-      - rabbitmq-net
+      rabbitmq-net: 
+        ipv4_address: 172.20.0.2
 
   rabbitmq2:
     build:
@@ -35,14 +42,18 @@ services:
     container_name: rabbitmq2
     hostname: rabbitmq2
     restart: always
+    cap_add:
+      - NET_ADMIN
     environment:
       - RABBITMQ_USE_LONGNAME=false
       - RABBITMQ_NODENAME=rabbit@rabbitmq2
+      - KEEPALIVED_PRIORITY=90
     volumes:
       - rabbitmq2_data:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf  # Monta o arquivo de config
     networks:
-      - rabbitmq-net
+          rabbitmq-net: 
+            ipv4_address: 172.20.0.3
     depends_on:
       - rabbitmq1
 
@@ -53,14 +64,18 @@ services:
     container_name: rabbitmq3
     hostname: rabbitmq3
     restart: always
+    cap_add:
+      - NET_ADMIN
     environment:
       - RABBITMQ_USE_LONGNAME=false
       - RABBITMQ_NODENAME=rabbit@rabbitmq3
+      - KEEPALIVED_PRIORITY=80
     volumes:
       - rabbitmq3_data:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf  # Monta o arquivo de config
     networks:
-      - rabbitmq-net
+          rabbitmq-net: 
+            ipv4_address: 172.20.0.4
     depends_on:
       - rabbitmq1
 
@@ -70,9 +85,10 @@ services:
     volumes:
       - ./middleware.py:/app/middleware.py
     environment:
-      - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
+      - RABBITMQ_HOST=172.20.0.100
     networks:
-      - rabbitmq-net
+        rabbitmq-net: 
+          ipv4_address: 172.20.0.5
     depends_on:
       - rabbitmq1
     command: ["python", "./middleware.py"]
@@ -83,9 +99,10 @@ services:
     volumes:
       - ./sensors.py:/app/sensors.py
     environment:
-      - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
+      - RABBITMQ_HOST=172.20.0.100
     networks:
-      - rabbitmq-net
+        rabbitmq-net: 
+          ipv4_address: 172.20.0.6
     depends_on:
       - rabbitmq1
     command: ["python", "./sensors.py"]
@@ -96,9 +113,10 @@ services:
     volumes:
       - ./actuators.py:/app/actuators.py
     environment:
-      - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
+      - RABBITMQ_HOST=172.20.0.100
     networks:
-      - rabbitmq-net
+      rabbitmq-net: 
+        ipv4_address: 172.20.0.7
     depends_on:
       - rabbitmq1
     command: ["python", "./actuators.py"]
