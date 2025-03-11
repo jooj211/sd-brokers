@@ -65,49 +65,43 @@ services:
       - rabbitmq1
 
   middleware:
-    build: 
-      context: ./middleware
-      dockerfile: Dockerfile
+    build: .
     container_name: middleware
     volumes:
-      - ./middleware/middleware.py:/app/middleware/middleware.py
+      - ./middleware.py:/app/middleware.py
     environment:
       - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
     networks:
       - rabbitmq-net
     depends_on:
       - rabbitmq1
-    command: ["python", "middleware/middleware.py"]
+    command: ["python", "./middleware.py"]
 
   sensors:
-    build: 
-      context: ./sensors
-      dockerfile: Dockerfile
+    build: .
     container_name: sensors
     volumes:
-      - ./sensors/sensors.py:/app/sensors/sensors.py
+      - ./sensors.py:/app/sensors.py
     environment:
       - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
     networks:
       - rabbitmq-net
     depends_on:
       - rabbitmq1
-    command: ["python", "sensors/sensors.py"]
+    command: ["python", "./sensors.py"]
 
   actuators:
-    build:
-      context: ./actuators
-      dockerfile: Dockerfile
+    build: .
     container_name: actuators
     volumes:
-      - ./actuators/actuators.py:/app/actuators/actuators.py
+      - ./actuators.py:/app/actuators.py
     environment:
       - RABBITMQ_HOST=rabbitmq1  # Conecta ao nó principal
     networks:
       - rabbitmq-net
     depends_on:
       - rabbitmq1
-    command: ["python", "actuators/actuators.py"]
+    command: ["python", "./actuators.py"]
 
 volumes:
   rabbitmq1_data:
