@@ -18,6 +18,8 @@ services:
     restart: always
     cap_add:
       - NET_ADMIN
+    sysctls:
+      - net.ipv4.ip_nonlocal_bind=1
     environment:
       - RABBITMQ_NODENAME=rabbit@rabbitmq1
       - RABBITMQ_USE_LONGNAME=false
@@ -44,6 +46,8 @@ services:
     restart: always
     cap_add:
       - NET_ADMIN
+    sysctls:
+      - net.ipv4.ip_nonlocal_bind=1
     environment:
       - RABBITMQ_USE_LONGNAME=false
       - RABBITMQ_NODENAME=rabbit@rabbitmq2
@@ -66,6 +70,8 @@ services:
     restart: always
     cap_add:
       - NET_ADMIN
+    sysctls:
+      - net.ipv4.ip_nonlocal_bind=1
     environment:
       - RABBITMQ_USE_LONGNAME=false
       - RABBITMQ_NODENAME=rabbit@rabbitmq3

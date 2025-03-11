@@ -9,6 +9,7 @@ COPY .erlang.cookie /var/lib/rabbitmq/.erlang.cookie
 RUN chmod 600 /var/lib/rabbitmq/.erlang.cookie
 
 # Copiar configurações do Keepalived e scripts
+COPY definitions.json /etc/rabbitmq
 COPY keepalived.conf /etc/keepalived/
 COPY check_rabbitmq.sh /etc/keepalived/
 RUN chmod +x /etc/keepalived/check_rabbitmq.sh
