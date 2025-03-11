@@ -20,4 +20,4 @@ RUN rabbitmq-plugins enable --offline \
     rabbitmq_management
 
 # 4. Define entrypoint
-ENTRYPOINT ["cluster-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/usr/local/bin/cluster-entrypoint.sh"]
