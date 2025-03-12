@@ -106,5 +106,14 @@
       "routing_key": "actuators.command",
       "arguments": {}
     }    
-  ]
+  ],
+  
+    "listeners": [
+        {
+        "ip": "172.18.0.100",
+        "port": 15672,
+        "protocol": "http"
+        }
+    ]
+  
 }
