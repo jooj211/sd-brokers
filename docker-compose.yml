@@ -4,6 +4,9 @@ networks:
   rabbitmq-net:
     driver: bridge
     name: rabbitmq-net
+    ipam:
+      config:
+      - subnet: 172.18.0.0/24
 
 services:
   rabbitmq1:
@@ -26,7 +29,8 @@ services:
       - rabbitmq1_data:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     networks:
-      - rabbitmq-net
+      rabbitmq-net:
+        ipv4_address: 172.18.0.200
 
   rabbitmq2:
     build:
