@@ -2,11 +2,22 @@ import json
 import random
 import time
 import paho.mqtt.client as mqtt
+from datetime import datetime
 
 BROKERS = ["rabbitmq1", "rabbitmq2", "rabbitmq3"]
 BROKER_PORT = 1883
 TOPIC = "sensors.data"
 RETRY_INTERVAL = 5
+
+# Mapeamento fixo de id_device para tipo (sem atuador)
+DEVICE_TYPES = {
+    1: "Temperatura",
+    2: "Umidade",
+    3: "Pressao",
+    4: "Temperatura",
+    5: "Umidade",
+    6: "Pressao",
+}
 
 class SensorClusterClient:
     def __init__(self):
@@ -32,16 +43,27 @@ class SensorClusterClient:
     
     def publish_data(self):
         while True:
+            id_circuit = random.randint(1, 4)  # ID do circuito (pode variar)
+            id_device = random.randint(1, 6)   # ID do dispositivo (fixo para manter o tipo)
+            tipo = DEVICE_TYPES[id_device]     # Obtém o tipo fixo do dispositivo
+            
+            # Gera o valor para sensores (não há mais atuador)
+            valor = random.uniform(30, 40)  # Valor contínuo para sensores
+            
+            # Estrutura dos dados a serem enviados
             sensor_data = {
-                "sensor_id": random.randint(1, 100),
-                "tipo": "temperatura" if random.random() > 0.5 else "umidade",
-                "valor": random.uniform(20.0, 40.0),
-                "timestamp": time.time(),
+                "id": id_circuit,
+                "device": {
+                    "id": id_device,
+                    "tipo": tipo,
+                    "valor": valor,
+                    "timestamp": datetime.now().isoformat(),
+                }
             }
             
             try:
                 self.client.publish(
-                    topic="sensors.data",
+                    topic=TOPIC,
                     payload=json.dumps(sensor_data),
                     qos=2
                 )
